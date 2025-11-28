@@ -1,0 +1,42 @@
+version: "3"
+
+dotenv:
+  - .env
+
+tasks:
+
+  compile:
+    env:
+      GOOS: linux
+    cmds:
+      - go build -o ./bin/appapi ./cmd/api/
+      - go build -o ./bin/appinfo ./cmd/info/
+      - go build -o ./bin/applogin ./cmd/login/
+
+  build:
+    cmds:
+      - docker build --no-cache -f ./cmd/api/Dockerfile -t appapi:latest .
+      - docker build --no-cache -f ./cmd/info/Dockerfile -t appinfo:latest .
+      - docker build --no-cache -f ./cmd/login/Dockerfile -t applogin:latest .
+  
+  push:
+    cmds:
+      - docker push lendy1/appapi:latest 
+      - docker push lendy1/appinfo:latest 
+      - docker push lendy1/applogin:latest 
+
+
+  deploy:
+    cmds:
+      - kubectl apply -n sirius -f ./k8s/api/
+      - kubectl apply -n sirius -f ./k8s/info/
+      - kubectl apply -n sirius -f ./k8s/login/
+      - kubectl apply -n sirius -f ./k8s/ingress.yaml
+
+
+
+  release:
+    cmds:
+      - task: compile
+      - task: build
+      - task: deploy
