@@ -21,9 +21,9 @@ tasks:
   
   push:
     cmds:
-      - docker push lendy1/appapi:latest 
-      - docker push lendy1/appinfo:latest 
-      - docker push lendy1/applogin:latest 
+    - docker push nikiyan/appapi:latest 
+    - docker push nikiyan/appinfo:latest 
+    - docker push nikiyan/applogin:latest 
 
 
   deploy:
